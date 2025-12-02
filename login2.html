@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="SingIn.css">
+  <title>Login</title>
+</head>
+<body>
+  <div class="container">
+    <div class="profile-icon">
+      <div class="icon"></div>
+      <h2>Login</h2>
+    </div>
+
+    <!-- LOGIN MANUAL -->
+    <form class="form-box">
+      <label>Email</label>
+      <input type="email" placeholder="seuemail@exemplo.com" required>
+      <label>Sua Senha</label>
+      <input type="password" placeholder="Digite sua senha" required>
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+
+   <!-- DIVISOR -->
+   <div class="divider">
+    <hr><span>ou</span><hr>
+   </div>
+
+<!-- Container para os botões de OAuth -->
+<div class="oauth-buttons">
+  <button class="btn-oauth email-oauth" id="emailLogin">Entrar com Email</button>
+  <button class="btn-oauth google-oauth" id="googleLogin">Entrar com Google</button>
+</div>
+
+</html>

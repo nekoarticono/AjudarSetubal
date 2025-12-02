@@ -1,0 +1,86 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-image: url('setubal-imagem.png'); 
+    background-position: center;
+    background-size: cover; /* faz a imagem ocupar toda a tela sem distorcer */
+    background-repeat: no-repeat; /* evita repetição */
+    background-attachment: fixed; /* mantém a imagem fixa no PC */
+    
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.85);
+    width: 350px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+}
+
+.profile-icon {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-icon .icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ddd;
+    margin: 0 auto;
+    position: relative;
+}
+
+.profile-icon h2 {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #333;
+}
+
+.form-box {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 10px 0 3px;
+    font-size: 14px;
+    color: #333;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus {
+    border-color: 
+    #4d7e97;
+}
+
+button {
+    margin-top: 20px;
+    background: #4d7e97;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #4d7e97;
+}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Cidadania Digital - Setúbal</title>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <header class="barra-superior">
+        <h1>Portal do Município</h1>
+        <div class="logo-setubal">Setúbal.</div>
+    </header>
+
+  <nav class="barra-menu">
+  <div class="menu-overlay" id="menu-overlay"></div>
+
+    <div class="menu-esquerda">
+        <button class="icone-menu" onclick="toggleMenu()">☰</button>
+        <span class="nome-site">ReportaCidade</span>
+    </div>
+
+    <!-- Menu Desktop -->
+    <div class="menu-direita desktop-menu">
+        <a href="login.html"><button class="botao-entrar">Criar conta</button></a>
+        <a href="login2.html"><button class="botao-login">Login</button></a>
+        
+    </div>
+
+</nav>
+
+<!-- Menu Mobile (fora da nav!) -->
+<div class="menu-mobile" id="menu-mobile">
+    <a href="login.html">Criar conta</a>
+    <a href="login2.html">Login</a>
+    
+</div>
+
+    <!-- Banner -->
+    <section class="banner">
+        <div class="image-container">
+            <img src="setubal.png" alt="Banner">
+            <div class="texto-banner">
+                <h2>Plataforma de ocorrências no Município</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Registar -->
+    <section class="como-registar">
+        <h2>Como registar uma ocorrência</h2>
+        <div class="passos-container">
+            <div class="passo">
+                <h3>1</h3>
+                <strong>Identificar</strong>
+                <p>Entre ou crie uma conta.</p>
+            </div>
+            <div class="divisor"></div>
+            <div class="passo">
+                <h3>2</h3>
+                <strong>Localizar</strong>
+                <p>Identifique o local e selecione a categoria.</p>
+            </div>
+            <div class="divisor"></div>
+            <div class="passo">
+                <h3>3</h3>
+                <strong>Submeter</strong>
+                <p>Envie e acompanhe o pedido.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estatísticas -->
+    <section class="estatisticas">
+        <h2>Número de ocorrências nas últimas 24h</h2>
+        <div class="container-estatisticas">
+            <div class="bloco-estatistica">
+                <h3>0</h3>
+                <p>Ocorrências reportadas</p>
+            </div>
+            <div class="divisor"></div>
+            <div class="bloco-estatistica">
+                <h3>0</h3>
+                <p>Ocorrências em análise</p>
+            </div>
+            <div class="divisor"></div>
+            <div class="bloco-estatistica">
+                <h3>0</h3>
+                <p>Ocorrências resolvidas</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vídeo + Texto Lado a Lado -->
+    <section class="secao-lateral">
+        <div class="video-lateral">
+            <video controls>
+                <source src="video.mp4" type="video/mp4">
+                O seu navegador não suporta vídeo.
+            </video>
+        </div>
+        <div class="texto-lateral">
+            <h3>Sobre Setúbal</h3>
+            <p>
+                Setúbal é uma cidade costeira conhecida pelas praias da Arrábida,
+                pela serra magnífica e pela sua forte identidade cultural.
+                É um município em crescimento e com cidadãos que participam
+                ativamente na melhoria da qualidade urbana.
+            </p>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="rodape">
+        <a href="privacidade.html" class="link-privacidade">
+            Política de Privacidade
+        </a>
+    </footer>
+
+    <!-- Script para menu mobile -->
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu-mobile');
+            menu.classList.toggle('open');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Reporta Cidade - Demo</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.5/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = "https://ndxcyrryiwbvzyzkrath.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_meHimVyAEGOxBkEN5kecMQ_Ua-4SaA6";
+
+  window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
+
+<style>
+/* ======= GLOBAL ======= */
+:root{
+  --green-main: #007714;
+  --green-dark: #005e10;
+  --card-bg: rgba(255,255,255,0.95);
+  --muted: #667;
+}
+*{box-sizing:border-box}
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Inter", Arial, sans-serif;
+    color: #122;
+    background: linear-gradient(180deg,#f6f8fa,#eef4ee);
+}
+/* header + submenu layout */
+#header { width: 100%; background: var(--green-main); color: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.06);}
+.header-left { display:flex; align-items:center; gap:14px; }
+.brand { font-size: 20px; font-weight: 700; }
+.header-right { display:flex; align-items:center; gap:12px; color: white; font-weight:500; }
+/* language toggle */
+.lang-btn { background: transparent; border: 2px solid white; color: white; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-weight:700; }
+.lang-btn:active{ transform: translateY(1px) }
+/* submenu */
+#submenu { width: 100%; background: white; padding: 12px 24px; display: flex; align-items: center; gap: 24px; font-size: 15px; color: var(--muted); border-bottom: 1px solid #e6e6e6; box-shadow: 0 1px 0 rgba(0,0,0,0.02);}
+#map { height: calc(100% - 112px); width: 100%; border-top: 1px solid rgba(0,0,0,0.04); }
+/* sidebar */
+#sidebar { position: absolute; top: 124px; left: 12px; width: 360px; max-height: calc(100% - 140px); background: var(--card-bg); backdrop-filter: blur(8px); border-radius: 14px; padding: 18px; box-shadow: 0 8px 30px rgba(10,20,10,0.08); overflow-y: auto; z-index: 1000; transition: left 0.3s ease;}
+#sidebar h2 { margin: 0 0 10px 0; font-size: 20px; color: #0f2b1a; }
+/* occurrence cards */
+.ocorrencia { padding: 12px; margin-bottom: 14px; border-radius: 12px; background: white; border: 1px solid #ececec; box-shadow: 0 6px 18px rgba(10,20,10,0.03); cursor: pointer; transition: transform .18s, box-shadow .18s;}
+.ocorrencia:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(10,20,10,0.06);}
+.ocorrencia .thumb { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; display:block; margin-bottom:10px; background: #f6f6f6;}
+.ocorrencia h3{ margin:0 0 6px 0; font-size:16px; color: #072d14;}
+.ocorrencia p{ margin:0 0 6px 0; font-size:13px; color: #445;}
+.estado { display:inline-block; margin-top:6px; padding:6px 10px; border-radius: 10px; font-size:12px; color:white; font-weight:700; background: linear-gradient(180deg,#ffb034,#e89b14);}
+.leaflet-popup-content-wrapper{ border-radius:10px; box-shadow: 0 12px 40px rgba(6,20,12,0.12); max-width: 95vw;}
+.leaflet-popup-content { min-width: 260px; font-size:14px; color:#122; padding:12px 12px;}
+.form-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
+.form-row.col { flex-direction:column; align-items:stretch; }
+.form-row .label { min-width:90px; font-weight:700; color:#133; font-size:13px; }
+.leaflet-popup-content input[type="text"],
+.leaflet-popup-content select,
+.leaflet-popup-content textarea { width:100%; padding:10px; font-size:16px; border-radius:8px; border:1px solid #d0d7d0; }
+.leaflet-popup-content textarea{ resize:vertical; min-height:60px; }
+.file-input-wrapper{ display:flex; gap:8px; align-items:center; margin-top:8px; }
+.custom-file-btn{ background: linear-gradient(180deg,var(--green-main),var(--green-dark)); color:white; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:700; border:none; box-shadow: 0 6px 14px rgba(0,120,40,0.12);}
+.custom-file-btn:active{ transform:translateY(1px) }
+.file-name { font-size:12px; color:#556; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.preview-img { width:100%; height:120px; object-fit:cover; border-radius:8px; margin-top:8px; border:1px solid #e6e6e6; }
+.leaflet-popup-content button.save-btn { width:100%; padding:12px; border-radius:10px; background: linear-gradient(180deg,var(--green-main),var(--green-dark)); border:none; color:white; font-weight:800; cursor:pointer; margin-top:10px; box-shadow: 0 8px 18px rgba(0,120,40,0.12);}
+@media (max-width:720px){ #sidebar { left: -100%; width: 90%; max-width: 320px; top: 100px; } .form-row .label { min-width:70px; font-size:14px; } #map { height: calc(100% - 160px); } }
+#toggleSidebar { display:none; }
+@media (max-width:720px){ #toggleSidebar { display:inline-block; margin-left:10px; } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="header-left">
+    <button id="toggleSidebar" class="lang-btn">📋</button>
+    <div class="brand">Cidade de Setúbal</div>
+  </div>
+  <div class="header-right">
+    <div class="setubal-box" style="background:transparent;border:2px solid rgba(255,255,255,0.2);padding:6px 12px;border-radius:6px;">Setúbal.</div>
+    <button id="langToggle" class="lang-btn" aria-pressed="false">EN</button>
+  </div>
+</div>
+
+<!-- SUBMENU -->
+<div id="submenu">
+  <div id="s-help"><strong>AjudaSetúbal</strong></div>
+  <div id="s-report">Reportar Ocorrência</div>
+  <div id="s-all">Todas as ocorrências</div>
+  <div id="s-faq">Ajuda</div>
+</div>
+
+<!-- MAP -->
+<div id="map" role="application" aria-label="Mapa interativo"></div>
+
+<!-- SIDEBAR -->
+<div id="sidebar" aria-live="polite">
+    <h2 id="sidebarTitle">📍 Ocorrências</h2>
+    <div id="listaOcorrencias" aria-atomic="true"></div>
+</div>
+
+<!-- FIREBASE MODULE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+/* -------------------- FIREBASE -------------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyBszOxK6XF7AduMHSvZKzlX-JlTAxRarPM",
+  authDomain: "piajudasetubal.firebaseapp.com",
+  projectId: "piajudasetubal",
+  messagingSenderId: "306664959034",
+  appId: "1:306664959034:web:41471ccba219bb93cb1903",
+  measurementId: "G-LS56EN7H4M"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+/* -------------------- SUPABASE -------------------- */
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* -------------------- FUNÇÃO UPLOAD SUPABASE -------------------- */
+async function uploadImagemSupabase(file) {
+  const fileName = `${Date.now()}_${file.name}`;
+  const { data, error } = await supabase.storage.from("imagens").upload(fileName, file);
+  if (error) throw error;
+  const { data: publicUrlData } = supabase.storage.from("imagens").getPublicUrl(fileName);
+  return publicUrlData.publicUrl;
+}
+
+/* -------------------- TORNAR ACESSÍVEL -------------------- */
+window.db = db;
+window.storage = storage;
+window.addDoc = addDoc;
+window.collection = collection;
+window.getDocs = getDocs;
+window.ref = ref;
+window.uploadBytes = uploadBytes;
+window.getDownloadURL = getDownloadURL;
+window.uploadImagemSupabase = uploadImagemSupabase;
+
+/* -------------------- SEU CÓDIGO -------------------- */
+const TEXTS = {
+  pt: { langLabel: 'EN', headerBrand: 'Cidade de Setúbal', submenu: { help: 'AjudaSetúbal', report: 'Reportar Ocorrência', all: 'Todas as ocorrências', faq: 'Ajuda' }, sidebarTitle: '📍 Ocorrências', newOccurrenceTitle: '📝 Nova ocorrência', labels: { titulo: 'Título', categoria: 'Categoria', descricao: 'Descrição', foto: 'Foto', guardar: '💾 Guardar', registada: 'Registada', chooseFile: 'Escolher ficheiro', noFile: 'Nenhum ficheiro' }, categories: ['Animais','Higiene e Limpeza','Iluminação Pública','Parques e Jardins','Praias e Espaços Verdes','Sinalização e Trânsito'] },
+  en: { langLabel: 'PT', headerBrand: 'Municipality of Setúbal', submenu: { help: 'HelpSetúbal', report: 'Report Incident', all: 'All incidents', faq: 'Help' }, sidebarTitle: '📍 Incidents', newOccurrenceTitle: '📝 New incident', labels: { titulo: 'Title', categoria: 'Category', descricao: 'Description', foto: 'Photo', guardar: '💾 Save', registada: 'Registered', chooseFile: 'Choose file', noFile: 'No file' }, categories: ['Animals','Hygiene & Cleaning','Public Lighting','Parks & Gardens','Beaches & Green Areas','Signage & Traffic'] }
+};
+
+let lang = 'pt';
+let map, markersGroup;
+
+document.addEventListener('DOMContentLoaded', () => {
+  
+  map = L.map("map").setView([38.52888, -8.88597], 15);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
+  markersGroup = L.layerGroup().addTo(map);
+
+  // --- gerir popup atual (global) ---
+let currentPopup = null;
+
+map.on('popupopen', (e) => {
+  currentPopup = e.popup.getElement(); // elemento DOM do popup aberto
+});
+
+map.on('popupclose', (e) => {
+  // limpa a referência quando fechar
+  currentPopup = null;
+});
+
+
+  const icon = L.icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [38, 38], iconAnchor: [19, 38] });
+
+  let ocorrencias = [];
+  const langToggle = document.getElementById('langToggle');
+  const toggleSidebarBtn = document.getElementById('toggleSidebar');
+  const sidebar = document.getElementById('sidebar');
+  toggleSidebarBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+  function applyLanguage() {
+    const t = TEXTS[lang];
+    document.querySelector('.brand').textContent = t.headerBrand;
+    document.getElementById('s-help').innerHTML = `<strong>${t.submenu.help}</strong>`;
+    document.getElementById('s-report').textContent = t.submenu.report;
+    document.getElementById('s-all').textContent = t.submenu.all;
+    document.getElementById('s-faq').textContent = t.submenu.faq;
+    document.getElementById('sidebarTitle').textContent = t.sidebarTitle;
+    renderLista();
+    renderPins();
+  }
+  langToggle.addEventListener('click', () => {
+    lang = (lang === 'pt') ? 'en' : 'pt';
+    langToggle.setAttribute('aria-pressed', lang === 'en');
+    applyLanguage();
+  });
+  applyLanguage();
+
+  function escapeHtml(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+  function getFormHTML(lat, lng) {
+    const id = Date.now(); // uniqueId
+    return `
+      <div style="min-width:260px">
+        <h4>📝 Nova ocorrência</h4>
+        <label>Título</label>
+        <input id="titulo-${id}" type="text" placeholder="Título">
+        <label>Categoria</label>
+        <select id="categoria-${id}">
+          <option>Animais</option><option>Higiene e Limpeza</option>
+          <option>Iluminação Pública</option><option>Parques e Jardins</option>
+          <option>Praias e Espaços Verdes</option><option>Sinalização e Trânsito</option>
+        </select>
+        <label>Descrição</label>
+        <textarea id="descricao-${id}" rows="3" placeholder="Descrição"></textarea>
+        <label>Foto</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="foto-${id}" type="file" accept="image/*">
+        </div>
+        <img id="preview-${id}" class="preview-img" src="https://via.placeholder.com/400x240?text=Preview" alt="preview"/>
+        <button class="save-btn" onclick="guardarOcorrencia(${lat}, ${lng}, ${id})">💾 Guardar</button>
+      </div>
+    `;
+  }
+
+  map.on("click", e => {
+    const html = getFormHTML(e.latlng.lat, e.latlng.lng);
+    L.popup({ maxWidth: 380 }).setLatLng(e.latlng).setContent(html).openOn(map);
+  });
+
+  map.on('popupopen', function(e) {
+    const popupEl = e.popup.getElement();
+    const fileInput = popupEl.querySelector('input[type="file"]');
+    const preview = popupEl.querySelector('img.preview-img');
+    if (!fileInput) return;
+    fileInput.addEventListener('change', (ev) => {
+      const f = ev.target.files[0];
+      if (!f) { preview.src = 'https://via.placeholder.com/400x240?text=Preview'; return; }
+      const reader = new FileReader();
+      reader.onload = (evt) => { preview.src = evt.target.result; };
+      reader.readAsDataURL(f);
+    });
+  });
+
+ async function guardarOcorrencia(lat, lng, uniqueId) {
+  try {
+    let tituloEl, categoriaEl, descricaoEl, fotoEl;
+
+    if (uniqueId !== undefined && uniqueId !== null) {
+      // caso estejas a usar uniqueId (IDs no document)
+      tituloEl = document.getElementById(`titulo-${uniqueId}`);
+      categoriaEl = document.getElementById(`categoria-${uniqueId}`);
+      descricaoEl = document.getElementById(`descricao-${uniqueId}`);
+      fotoEl = document.getElementById(`foto-${uniqueId}`);
+    } else {
+      // fallback: pegar elementos dentro do popup atualmente aberto
+      if (!currentPopup) throw new Error("Popup não encontrado. Reabre o formulário e tenta de novo.");
+      tituloEl = currentPopup.querySelector('input[type="text"], input.titulo');
+      categoriaEl = currentPopup.querySelector('select, select.categoria');
+      descricaoEl = currentPopup.querySelector('textarea, textarea.descricao');
+      fotoEl = currentPopup.querySelector('input[type="file"], input.foto');
+    }
+
+    if (!tituloEl || !categoriaEl || !descricaoEl) {
+      throw new Error("Campos do formulário não encontrados. Reabre o popup e tenta de novo.");
+    }
+
+    const titulo = (tituloEl.value || "").trim();
+    const categoria = (categoriaEl.value || "").trim();
+    const descricao = (descricaoEl.value || "").trim();
+    const fotoFile = fotoEl && fotoEl.files && fotoEl.files[0];
+
+    let fotoURL = "https://via.placeholder.com/400";
+
+    if (fotoFile) {
+      // usa Supabase (já definido no teu script)
+      const fileName = `${Date.now()}_${fotoFile.name}`;
+      const { data, error } = await supabase.storage.from('imagems_reportes').upload(fileName, fotoFile);
+      if (error) {
+        console.error("Erro ao subir imagem no Supabase:", error);
+        throw error;
+      }
+      fotoURL = supabase.storage.from('imagems_reportes').getPublicUrl(fileName).data.publicUrl;
+    }
+
+    // guarda no Firestore
+    await window.addDoc(window.collection(window.db, "registros"), {
+      titulo, categoria, descricao, foto: fotoURL, lat, lng, data: new Date().toISOString()
+    });
+
+    alert("Ocorrência guardada com sucesso!");
+    map.closePopup();
+    carregarOcorrencias();
+  } catch (err) {
+    console.error("Erro ao guardar ocorrência:", err);
+    alert("Erro: " + (err.message || err));
+  }
+}
+window.guardarOcorrencia = guardarOcorrencia;
+
+
+  async function carregarOcorrencias() {
+    try {
+      const querySnapshot = await getDocs(collection(db, "registros"));
+      ocorrencias = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        ocorrencias.push({ titulo: data.titulo, categoria: data.categoria, descricao: data.descricao, foto: data.foto || "https://via.placeholder.com/400", lat: data.lat, lng: data.lng });
+      });
+      renderLista();
+      renderPins();
+    } catch (err) {
+      console.error("Erro ao carregar ocorrências:", err);
+    }
+  }
+
+  function renderLista() {
+    const div = document.getElementById('listaOcorrencias');
+    div.innerHTML = '';
+    const t = TEXTS[lang];
+    ocorrencias.forEach(o => {
+      const card = document.createElement('div');
+      card.className = 'ocorrencia';
+      card.innerHTML = `<img class="thumb" src="${o.foto}" alt="foto"/><h3>${o.titulo}</h3><p>${o.descricao}</p><span class="estado">${t.labels.registada}</span>`;
+      div.appendChild(card);
+      card.addEventListener('click', () => map.setView([o.lat, o.lng], 18));
+    });
+  }
+
+  function renderPins() {
+    if (!markersGroup) return;
+    markersGroup.clearLayers();
+    ocorrencias.forEach(o => {
+      const m = L.marker([o.lat, o.lng], { icon: icon }).addTo(markersGroup);
+      m.bindPopup(`<strong>${escapeHtml(o.titulo)}</strong><br>${escapeHtml(o.descricao)}`);
+    });
+  }
+
+  carregarOcorrencias();
+});
+</script>
+
+</body>
+</html>
