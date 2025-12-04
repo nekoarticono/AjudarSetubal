@@ -11,7 +11,7 @@
     <!-- Barra Superior -->
     <header class="barra-superior">
         <h1>Portal do Município</h1>
-        <div class="logo-setubal">Setúbal.</div>
+        <div class="logo-setubal">Setúbal</div>
     </header>
 
   <nav class="barra-menu">
@@ -26,7 +26,7 @@
     <div class="menu-direita desktop-menu">
         <a href="login.html"><button class="botao-entrar">Criar conta</button></a>
         <a href="login2.html"><button class="botao-login">Login</button></a>
-        
+        <a href="site.html"><button class="botao-reportar">Reporta Ocorrencia</button></a>
     </div>
 
 </nav>
@@ -35,6 +35,7 @@
 <div class="menu-mobile" id="menu-mobile">
     <a href="login.html">Criar conta</a>
     <a href="login2.html">Login</a>
+    <a href="site.html">Reportar Ocorrencia</a>
     
 </div>
 
@@ -118,14 +119,106 @@
             Política de Privacidade
         </a>
     </footer>
-
     <!-- Script para menu mobile -->
     <script>
         function toggleMenu() {
             const menu = document.getElementById('menu-mobile');
             menu.classList.toggle('open');
         }
+// Fecha menu mobile se clicar fora dele
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('menu-mobile');
+    const botaoMenu = document.querySelector('.icone-menu');
+
+    // Se o menu estiver aberto e o clique não for nem no menu nem no botão
+    if (menu.classList.contains('open') && !menu.contains(event.target) && !botaoMenu.contains(event.target)) {
+        menu.classList.remove('open');
+    }
+});
     </script>
+<script>
+const username = localStorage.getItem("username");
+const userUID = localStorage.getItem("userUID");
+
+const botaoReportar = document.querySelectorAll("a[href='site.html']");
+const menuDireita = document.querySelector('.menu-direita');
+const menuMobile = document.getElementById("menu-mobile");
+
+if (!userUID) {
+    // Usuário não logado
+    botaoReportar.forEach(btn => btn.style.display = "none"); // Esconde reportar
+} else {
+    // Usuário logado
+    botaoReportar.forEach(btn => btn.style.display = "inline-block"); // Mostra reportar
+
+    // Esconder login e criar conta (desktop)
+    menuDireita.querySelectorAll(".botao-login, .botao-entrar").forEach(el => el.style.display = "none");
+
+    // ---------- Desktop: username + logout ----------
+    const userContainer = document.createElement("div");
+    userContainer.style.display = "flex";
+    userContainer.style.alignItems = "center";
+    userContainer.style.gap = "10px";
+
+    const userNameSpan = document.createElement("span");
+    userNameSpan.textContent = username;
+    userNameSpan.style.fontWeight = "bold";
+    userNameSpan.style.color = "#4d7e97";
+
+    const logoutBtn = document.createElement("button");
+    logoutBtn.textContent = "Logout";
+    logoutBtn.style.background = "#d9534f";
+    logoutBtn.style.color = "white";
+    logoutBtn.style.border = "none";
+    logoutBtn.style.padding = "8px 15px";
+    logoutBtn.style.cursor = "pointer";
+    logoutBtn.style.fontWeight = "bold";
+    logoutBtn.onclick = () => {
+        localStorage.removeItem("userUID");
+        localStorage.removeItem("username");
+        window.location.reload();
+    };
+
+    userContainer.appendChild(userNameSpan);
+    userContainer.appendChild(logoutBtn);
+    menuDireita.appendChild(userContainer);
+
+    // ---------- Mobile: username + logout ----------
+    menuMobile.querySelectorAll("a[href='login.html'], a[href='login2.html']").forEach(el => el.style.display = "none");
+
+    const mobileUserContainer = document.createElement("div");
+    mobileUserContainer.style.display = "flex";
+    mobileUserContainer.style.alignItems = "center";
+    mobileUserContainer.style.justifyContent = "space-between";
+    mobileUserContainer.style.padding = "10px";
+    mobileUserContainer.style.borderBottom = "1px solid #ccc";
+
+    const mobileUserName = document.createElement("span");
+    mobileUserName.textContent = username;
+    mobileUserName.style.fontWeight = "bold";
+    mobileUserName.style.color = "#4d7e97";
+
+    const mobileLogoutBtn = document.createElement("button");
+    mobileLogoutBtn.textContent = "Logout";
+    mobileLogoutBtn.style.background = "none";
+    mobileLogoutBtn.style.color = "red";
+    mobileLogoutBtn.style.border = "none";
+    mobileLogoutBtn.style.fontWeight = "bold";
+    mobileLogoutBtn.style.cursor = "pointer";
+    mobileLogoutBtn.onclick = () => {
+        localStorage.removeItem("userUID");
+        localStorage.removeItem("username");
+        window.location.reload();
+    };
+
+    mobileUserContainer.appendChild(mobileUserName);
+    mobileUserContainer.appendChild(mobileLogoutBtn);
+    menuMobile.prepend(mobileUserContainer);
+}
+</script>
+
+
 
 </body>
 </html>
+
