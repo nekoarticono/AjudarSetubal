@@ -35,7 +35,7 @@
 <div class="menu-mobile" id="menu-mobile">
     <a href="login.html">Criar conta</a>
     <a href="login2.html">Login</a>
-    <a href="Pag_Reportes">Reportar Ocorrencia</a>
+    <a href="Pag_Reportes.html">Reportar Ocorrencia</a>
     
 </div>
 
@@ -125,6 +125,8 @@
             const menu = document.getElementById('menu-mobile');
             menu.classList.toggle('open');
         }
+
+
 // Fecha menu mobile se clicar fora dele
 document.addEventListener('click', function(event) {
     const menu = document.getElementById('menu-mobile');
@@ -140,7 +142,7 @@ document.addEventListener('click', function(event) {
 const username = localStorage.getItem("username");
 const userUID = localStorage.getItem("userUID");
 
-const botaoReportar = document.querySelectorAll("a[href='site.html']");
+const botaoReportar = document.querySelectorAll("a[href='Pag_Reportes.html']");
 const menuDireita = document.querySelector('.menu-direita');
 const menuMobile = document.getElementById("menu-mobile");
 
