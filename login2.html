@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="SingIn.css">
-  <title>Login</title>
+  <title>Login - Ajudar Setúbal</title>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
   <div class="container">
     <div class="profile-icon">
@@ -13,24 +19,71 @@
       <h2>Login</h2>
     </div>
 
-    <!-- LOGIN MANUAL -->
-    <form class="form-box">
+    <!-- LOGIN -->
+    <form class="form-box" id="formLogin">
       <label>Email</label>
-      <input type="email" placeholder="seuemail@exemplo.com" required>
+      <input id="email" type="email" placeholder="seuemail@exemplo.com" required>
+
       <label>Sua Senha</label>
-      <input type="password" placeholder="Digite sua senha" required>
+      <input id="password" type="password" placeholder="Digite sua senha" required>
+
       <button type="submit" class="btn-primary">Entrar</button>
     </form>
 
-   <!-- DIVISOR -->
-   <div class="divider">
-    <hr><span>ou</span><hr>
-   </div>
+    <p id="msg"></p>
+  </div>
 
-<!-- Container para os botões de OAuth -->
-<div class="oauth-buttons">
-  <button class="btn-oauth email-oauth" id="emailLogin">Entrar com Email</button>
-  <button class="btn-oauth google-oauth" id="googleLogin">Entrar com Google</button>
-</div>
+<script>
+  // ---------- CONFIGURAR FIREBASE ----------
+  const firebaseConfig = {
+    apiKey: "AIzaSyBszOxK6XF7AduMHSvZKzlX-JlTAxRarPM",
+    authDomain: "piajudasetubal.firebaseapp.com",
+    projectId: "piajudasetubal",
+    messagingSenderId: "306664959034",
+    appId: "1:306664959034:web:41471ccba219bb93cb1903",
+    measurementId: "G-LS56EN7H4M"
+  };
 
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // -------------- LOGIN ----------------
+  document.getElementById("formLogin").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const msg = document.getElementById("msg");
+
+    msg.innerText = "A verificar...";
+
+    auth.signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        msg.innerText = "Login efetuado!";
+
+        // Guardar UID para sessão
+        localStorage.setItem("userUID", userCredential.user.uid);
+
+        // Redirecionar para a página principal
+        setTimeout(() => {
+          window.location.href = "index.html"; 
+        }, 1000);
+      })
+      .catch((error) => {
+        console.error(error);
+
+        if (error.code === "auth/user-not-found") {
+          msg.innerText = "Erro: este email não está registado.";
+        } else if (error.code === "auth/wrong-password") {
+          msg.innerText = "Erro: senha incorreta.";
+        } else if (error.code === "auth/invalid-email") {
+          msg.innerText = "Erro: email inválido.";
+        } else {
+          msg.innerText = "Erro ao entrar: " + error.message;
+        }
+      });
+  });
+</script>
+
+</body>
 </html>
