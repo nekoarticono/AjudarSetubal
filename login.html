@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="SingIn.css"> 
-    <title>Document</title>
+    <title>Criar Conta - Ajudar Setúbal</title>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -14,25 +19,125 @@
             <h2>Criar Conta</h2>
         </div>
 
-        <form class="form-box">
-            <label>Nome Completo</label>
-            <input type="text" placeholder="Seu nome" required>
+        <form class="form-box" id="formCadastro">
+            
+            <label>Nome</label>
+            <input id="nome" type="text" placeholder="Seu nome" required>
+
+            <label>Apelido</label>
+            <input id="apelido" type="text" placeholder="Seu apelido" required>
 
             <label>Username</label>
-            <input type="text" placeholder="Nome de usuário" required>
+            <input id="username" type="text" placeholder="Nome de usuário" required>
 
             <label>Email</label>
-            <input type="email" placeholder="seuemail@exemplo.com" required>
+            <input id="email" type="email" placeholder="seuemail@exemplo.com" required>
 
             <label>Contato</label>
-            <input type="tel" placeholder="00000-0000">
+           <input id="contato" type="tel" placeholder="000000000" minlength="9" maxlength="9" pattern="\d{9}" required>
 
-            <label>Criar Senha</label>
-            <input type="password" placeholder="Digite sua senha" required>
+            <label>Senha</label>
+            <input id="password" type="password" placeholder="Digite sua senha" required>
 
             <button type="submit">Criar Conta</button>
-
         </form>
+
+        <p id="msg"></p>
+
     </div>
+
+<script>
+// ------------------ CONFIG FIREBASE -------------------
+const firebaseConfig = {
+  apiKey: "AIzaSyBszOxK6XF7AduMHSvZKzlX-JlTAxRarPM",
+  authDomain: "piajudasetubal.firebaseapp.com",
+  projectId: "piajudasetubal",
+  messagingSenderId: "306664959034",
+  appId: "1:306664959034:web:41471ccba219bb93cb1903",
+  measurementId: "G-LS56EN7H4M"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// ----------- EVENTO DO FORM -----------------
+document.getElementById("formCadastro").addEventListener("submit", criarConta);
+
+function criarConta(event) {
+    event.preventDefault();
+
+    const nome = document.getElementById("nome").value.trim();
+    const apelido = document.getElementById("apelido").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const contato = document.getElementById("contato").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const msg = document.getElementById("msg");
+
+    msg.innerText = "A verificar informações...";
+
+    // ---------- 0️⃣ VALIDAR TELEFONE AQUI ----------
+    if (!/^\d{9}$/.test(contato)) {
+        msg.innerText = "O número de telemóvel deve ter exatamente 9 dígitos.";
+        return;
+    }
+
+    // ---------- 1️⃣ VERIFICAR USERNAME DUPLICADO ----------
+    db.collection("login")
+        .where("username", "==", username)
+        .get()
+        .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                msg.innerText = "Erro: já existe uma conta com esse username.";
+                throw new Error("USERNAME_DUPLICADO");
+            }
+
+            msg.innerText = "A criar conta...";
+
+            // ---------- 2️⃣ CRIAR UTILIZADOR NO AUTH ----------
+            return auth.createUserWithEmailAndPassword(email, password);
+        })
+        .then((userCredential) => {
+            const uid = userCredential.user.uid;
+
+            // ---------- 3️⃣ GUARDAR NO FIRESTORE ----------
+            return db.collection("login").doc(uid).set({
+                nome: nome,
+                apelido: apelido,
+                username: username,
+                email: email,
+                contato: contato,
+                criadoEm: new Date()
+            });
+        })
+        .then(() => {
+            msg.innerText = "Conta criada com sucesso!";
+            setTimeout(() => {
+                window.location.href = "login2.html";
+            }, 1500);
+        })
+        .catch((error) => {
+            console.error(error);
+
+            // ------ ERROS CUSTOMIZADOS ------
+            if (error.message === "USERNAME_DUPLICADO") return;
+
+            // ------ ERROS DO FIREBASE AUTH ------
+            if (error.code === "auth/email-already-in-use") {
+                msg.innerText = "Erro: este email já está registado.";
+            } else if (error.code === "auth/invalid-email") {
+                msg.innerText = "Erro: email inválido.";
+            } else if (error.code === "auth/weak-password") {
+                msg.innerText = "Erro: a senha é demasiado fraca.";
+            } else {
+                msg.innerText = "Erro ao criar conta: " + error.message;
+            }
+        });
+}
+
+</script>
+
 </body>
 </html>
