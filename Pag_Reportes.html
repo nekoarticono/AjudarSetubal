@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" href="site.css">
 <title>Reporta Cidade - Demo</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -17,60 +18,7 @@
 
 <style>
 /* ======= GLOBAL ======= */
-:root{
-  --green-main: #007714;
-  --green-dark: #005e10;
-  --card-bg: rgba(255,255,255,0.95);
-  --muted: #667;
-}
-*{box-sizing:border-box}
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: "Inter", Arial, sans-serif;
-    color: #122;
-    background: linear-gradient(180deg,#f6f8fa,#eef4ee);
-}
-/* header + submenu layout */
-#header { width: 100%; background: var(--green-main); color: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.06);}
-.header-left { display:flex; align-items:center; gap:14px; }
-.brand { font-size: 20px; font-weight: 700; }
-.header-right { display:flex; align-items:center; gap:12px; color: white; font-weight:500; }
-/* language toggle */
-.lang-btn { background: transparent; border: 2px solid white; color: white; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-weight:700; }
-.lang-btn:active{ transform: translateY(1px) }
-/* submenu */
-#submenu { width: 100%; background: white; padding: 12px 24px; display: flex; align-items: center; gap: 24px; font-size: 15px; color: var(--muted); border-bottom: 1px solid #e6e6e6; box-shadow: 0 1px 0 rgba(0,0,0,0.02);}
-#map { height: calc(100% - 112px); width: 100%; border-top: 1px solid rgba(0,0,0,0.04); }
-/* sidebar */
-#sidebar { position: absolute; top: 124px; left: 12px; width: 360px; max-height: calc(100% - 140px); background: var(--card-bg); backdrop-filter: blur(8px); border-radius: 14px; padding: 18px; box-shadow: 0 8px 30px rgba(10,20,10,0.08); overflow-y: auto; z-index: 1000; transition: left 0.3s ease;}
-#sidebar h2 { margin: 0 0 10px 0; font-size: 20px; color: #0f2b1a; }
-/* occurrence cards */
-.ocorrencia { padding: 12px; margin-bottom: 14px; border-radius: 12px; background: white; border: 1px solid #ececec; box-shadow: 0 6px 18px rgba(10,20,10,0.03); cursor: pointer; transition: transform .18s, box-shadow .18s;}
-.ocorrencia:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(10,20,10,0.06);}
-.ocorrencia .thumb { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; display:block; margin-bottom:10px; background: #f6f6f6;}
-.ocorrencia h3{ margin:0 0 6px 0; font-size:16px; color: #072d14;}
-.ocorrencia p{ margin:0 0 6px 0; font-size:13px; color: #445;}
-.estado { display:inline-block; margin-top:6px; padding:6px 10px; border-radius: 10px; font-size:12px; color:white; font-weight:700; background: linear-gradient(180deg,#ffb034,#e89b14);}
-.leaflet-popup-content-wrapper{ border-radius:10px; box-shadow: 0 12px 40px rgba(6,20,12,0.12); max-width: 95vw;}
-.leaflet-popup-content { min-width: 260px; font-size:14px; color:#122; padding:12px 12px;}
-.form-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
-.form-row.col { flex-direction:column; align-items:stretch; }
-.form-row .label { min-width:90px; font-weight:700; color:#133; font-size:13px; }
-.leaflet-popup-content input[type="text"],
-.leaflet-popup-content select,
-.leaflet-popup-content textarea { width:100%; padding:10px; font-size:16px; border-radius:8px; border:1px solid #d0d7d0; }
-.leaflet-popup-content textarea{ resize:vertical; min-height:60px; }
-.file-input-wrapper{ display:flex; gap:8px; align-items:center; margin-top:8px; }
-.custom-file-btn{ background: linear-gradient(180deg,var(--green-main),var(--green-dark)); color:white; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:700; border:none; box-shadow: 0 6px 14px rgba(0,120,40,0.12);}
-.custom-file-btn:active{ transform:translateY(1px) }
-.file-name { font-size:12px; color:#556; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.preview-img { width:100%; height:120px; object-fit:cover; border-radius:8px; margin-top:8px; border:1px solid #e6e6e6; }
-.leaflet-popup-content button.save-btn { width:100%; padding:12px; border-radius:10px; background: linear-gradient(180deg,var(--green-main),var(--green-dark)); border:none; color:white; font-weight:800; cursor:pointer; margin-top:10px; box-shadow: 0 8px 18px rgba(0,120,40,0.12);}
-@media (max-width:720px){ #sidebar { left: -100%; width: 90%; max-width: 320px; top: 100px; } .form-row .label { min-width:70px; font-size:14px; } #map { height: calc(100% - 160px); } }
-#toggleSidebar { display:none; }
-@media (max-width:720px){ #toggleSidebar { display:inline-block; margin-left:10px; } }
+
 </style>
 </head>
 <body>
@@ -86,13 +34,10 @@ body, html {
     <button id="langToggle" class="lang-btn" aria-pressed="false">EN</button>
   </div>
 </div>
-
 <!-- SUBMENU -->
 <div id="submenu">
   <div id="s-help"><strong>AjudaSetúbal</strong></div>
-  <div id="s-report">Reportar Ocorrência</div>
-  <div id="s-all">Todas as ocorrências</div>
-  <div id="s-faq">Ajuda</div>
+  <a href="index.html"><button id="btnVoltar" class="menu-btn">🏠 Voltar</button></a>
 </div>
 
 <!-- MAP -->
@@ -112,7 +57,13 @@ import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.c
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-/* -------------------- FIREBASE -------------------- */
+// Limites do mapa (Setúbal)
+const boundsSetubal = L.latLngBounds(
+  [38.505, -8.945],
+  [38.555, -8.835]
+);
+
+// Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBszOxK6XF7AduMHSvZKzlX-JlTAxRarPM",
   authDomain: "piajudasetubal.firebaseapp.com",
@@ -121,17 +72,15 @@ const firebaseConfig = {
   appId: "1:306664959034:web:41471ccba219bb93cb1903",
   measurementId: "G-LS56EN7H4M"
 };
-
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-/* -------------------- SUPABASE -------------------- */
-
+// Supabase
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* -------------------- FUNÇÃO UPLOAD SUPABASE -------------------- */
+// Função para upload de imagens no Supabase
 async function uploadImagemSupabase(file) {
   const fileName = `${Date.now()}_${file.name}`;
   const { data, error } = await supabase.storage.from("imagens").upload(fileName, file);
@@ -140,7 +89,7 @@ async function uploadImagemSupabase(file) {
   return publicUrlData.publicUrl;
 }
 
-/* -------------------- TORNAR ACESSÍVEL -------------------- */
+// Tornar Firebase e Supabase globais
 window.db = db;
 window.storage = storage;
 window.addDoc = addDoc;
@@ -151,64 +100,122 @@ window.uploadBytes = uploadBytes;
 window.getDownloadURL = getDownloadURL;
 window.uploadImagemSupabase = uploadImagemSupabase;
 
-/* -------------------- SEU CÓDIGO -------------------- */
+// Tradução e textos
 const TEXTS = {
-  pt: { langLabel: 'EN', headerBrand: 'Cidade de Setúbal', submenu: { help: 'AjudaSetúbal', report: 'Reportar Ocorrência', all: 'Todas as ocorrências', faq: 'Ajuda' }, sidebarTitle: '📍 Ocorrências', newOccurrenceTitle: '📝 Nova ocorrência', labels: { titulo: 'Título', categoria: 'Categoria', descricao: 'Descrição', foto: 'Foto', guardar: '💾 Guardar', registada: 'Registada', chooseFile: 'Escolher ficheiro', noFile: 'Nenhum ficheiro' }, categories: ['Animais','Higiene e Limpeza','Iluminação Pública','Parques e Jardins','Praias e Espaços Verdes','Sinalização e Trânsito'] },
-  en: { langLabel: 'PT', headerBrand: 'Municipality of Setúbal', submenu: { help: 'HelpSetúbal', report: 'Report Incident', all: 'All incidents', faq: 'Help' }, sidebarTitle: '📍 Incidents', newOccurrenceTitle: '📝 New incident', labels: { titulo: 'Title', categoria: 'Category', descricao: 'Description', foto: 'Photo', guardar: '💾 Save', registada: 'Registered', chooseFile: 'Choose file', noFile: 'No file' }, categories: ['Animals','Hygiene & Cleaning','Public Lighting','Parks & Gardens','Beaches & Green Areas','Signage & Traffic'] }
+  pt: {
+    langLabel: 'EN',
+    headerBrand: 'Cidade de Setúbal',
+    submenu: { help: 'AjudaSetúbal' },
+    sidebarTitle: '📍 Ocorrências',
+    newOccurrenceTitle: '📝 Nova ocorrência',
+    labels: { titulo: 'Título', categoria: 'Categoria', descricao: 'Descrição', foto: 'Foto', guardar: '💾 Guardar', registada: 'Registada', chooseFile: 'Escolher ficheiro', noFile: 'Nenhum ficheiro' },
+    categories: ['Animais','Higiene e Limpeza','Iluminação Pública','Parques e Jardins','Praias e Espaços Verdes','Sinalização e Trânsito']
+  },
+  en: {
+    langLabel: 'PT',
+    headerBrand: 'City of Setúbal',
+    submenu: { help: 'AjudaSetúbal'},
+    sidebarTitle: '📍 Incidents',
+    newOccurrenceTitle: '📝 New incident',
+    labels: { titulo: 'Title', categoria: 'Category', descricao: 'Description', foto: 'Photo', guardar: '💾 Save', registada: 'Registered', chooseFile: 'Choose file', noFile: 'No file' },
+    categories: ['Animals','Hygiene & Cleaning','Public Lighting','Parks & Gardens','Beaches & Green Areas','Signage & Traffic']
+  }
 };
 
 let lang = 'pt';
 let map, markersGroup;
+let ocorrencias = [];
+let currentPopup = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-  
-  map = L.map("map").setView([38.52888, -8.88597], 15);
+
+  document.addEventListener('DOMContentLoaded', () => {
+  const listaOcorrencias = document.getElementById('listaOcorrencias');
+  const sidebar = document.getElementById('sidebar');
+
+  // botão que só aparece no mobile
+  const mobileOcorrenciasBtn = document.createElement('button');
+  mobileOcorrenciasBtn.textContent = '📍 Minhas Ocorrências';
+  mobileOcorrenciasBtn.style.padding = '8px 12px';
+  mobileOcorrenciasBtn.style.margin = '10px';
+  mobileOcorrenciasBtn.style.cursor = 'pointer';
+
+  // adicionar no topo do header ou onde quiser no mobile
+  const headerRight = document.querySelector('.header-right');
+  headerRight.appendChild(mobileOcorrenciasBtn);
+
+  // função de mostrar/esconder ocorrências
+  mobileOcorrenciasBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // impede fechar ao clicar
+    if (listaOcorrencias.style.display === 'block') {
+      listaOcorrencias.style.display = 'none';
+    } else {
+      listaOcorrencias.style.display = 'block';
+      sidebar.classList.add('open'); // garante que o sidebar abre
+    }
+  });
+
+  // fecha sidebar e lista se clicar fora
+  document.addEventListener('click', (e) => {
+    if (!sidebar.contains(e.target) && e.target !== mobileOcorrenciasBtn) {
+      sidebar.classList.remove('open');
+      listaOcorrencias.style.display = 'none';
+    }
+  });
+
+  // impede que clique dentro do sidebar feche
+  sidebar.addEventListener('click', (e) => e.stopPropagation());
+});
+  // Inicializa mapa
+  map = L.map("map", {
+    zoomControl: false,
+    minZoom: 15,
+    maxZoom: 19,
+    maxBounds: boundsSetubal,
+    maxBoundsViscosity: 1.0
+    
+  }).setView([38.52888, -8.88597], 15);
+    L.control.zoom({
+      position: 'topright'
+       }).addTo(map);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
   markersGroup = L.layerGroup().addTo(map);
 
-  // --- gerir popup atual (global) ---
-let currentPopup = null;
+  // Eventos para popup
+  map.on('popupopen', (e) => { currentPopup = e.popup.getElement(); });
+  map.on('popupclose', (e) => { currentPopup = null; });
 
-map.on('popupopen', (e) => {
-  currentPopup = e.popup.getElement(); // elemento DOM do popup aberto
-});
-
-map.on('popupclose', (e) => {
-  // limpa a referência quando fechar
-  currentPopup = null;
-});
-
-
+  // Ícone padrão
   const icon = L.icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [38, 38], iconAnchor: [19, 38] });
 
-  let ocorrencias = [];
-  const langToggle = document.getElementById('langToggle');
+  // Botão sidebar
   const toggleSidebarBtn = document.getElementById('toggleSidebar');
   const sidebar = document.getElementById('sidebar');
   toggleSidebarBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+  // Alternar linguagem
+  const langToggle = document.getElementById('langToggle');
+  langToggle.addEventListener('click', () => {
+    lang = (lang === 'pt') ? 'en' : 'pt';
+    langToggle.setAttribute('aria-pressed', lang === 'en');
+    applyLanguage();
+    
+  });
+  applyLanguage();
 
   function applyLanguage() {
     const t = TEXTS[lang];
     document.querySelector('.brand').textContent = t.headerBrand;
     document.getElementById('s-help').innerHTML = `<strong>${t.submenu.help}</strong>`;
-    document.getElementById('s-report').textContent = t.submenu.report;
-    document.getElementById('s-all').textContent = t.submenu.all;
-    document.getElementById('s-faq').textContent = t.submenu.faq;
     document.getElementById('sidebarTitle').textContent = t.sidebarTitle;
     renderLista();
     renderPins();
   }
-  langToggle.addEventListener('click', () => {
-    lang = (lang === 'pt') ? 'en' : 'pt';
-    langToggle.setAttribute('aria-pressed', lang === 'en');
-    applyLanguage();
-  });
-  applyLanguage();
 
   function escapeHtml(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
   function getFormHTML(lat, lng) {
-    const id = Date.now(); // uniqueId
+    const id = Date.now();
     return `
       <div style="min-width:260px">
         <h4>📝 Nova ocorrência</h4>
@@ -251,71 +258,73 @@ map.on('popupclose', (e) => {
     });
   });
 
- async function guardarOcorrencia(lat, lng, uniqueId) {
-  try {
-    let tituloEl, categoriaEl, descricaoEl, fotoEl;
+  // ===== Funções principais =====
+  async function guardarOcorrencia(lat, lng, uniqueId) {
+    try {
+      const username = localStorage.getItem("username");
+      const userUID = localStorage.getItem("userUID");
+      if (!userUID) throw new Error("É necessário fazer login para reportar ocorrências.");
 
-    if (uniqueId !== undefined && uniqueId !== null) {
-      // caso estejas a usar uniqueId (IDs no document)
-      tituloEl = document.getElementById(`titulo-${uniqueId}`);
-      categoriaEl = document.getElementById(`categoria-${uniqueId}`);
-      descricaoEl = document.getElementById(`descricao-${uniqueId}`);
-      fotoEl = document.getElementById(`foto-${uniqueId}`);
-    } else {
-      // fallback: pegar elementos dentro do popup atualmente aberto
-      if (!currentPopup) throw new Error("Popup não encontrado. Reabre o formulário e tenta de novo.");
-      tituloEl = currentPopup.querySelector('input[type="text"], input.titulo');
-      categoriaEl = currentPopup.querySelector('select, select.categoria');
-      descricaoEl = currentPopup.querySelector('textarea, textarea.descricao');
-      fotoEl = currentPopup.querySelector('input[type="file"], input.foto');
-    }
+      let tituloEl = document.getElementById(`titulo-${uniqueId}`);
+      let categoriaEl = document.getElementById(`categoria-${uniqueId}`);
+      let descricaoEl = document.getElementById(`descricao-${uniqueId}`);
+      let fotoEl = document.getElementById(`foto-${uniqueId}`);
 
-    if (!tituloEl || !categoriaEl || !descricaoEl) {
-      throw new Error("Campos do formulário não encontrados. Reabre o popup e tenta de novo.");
-    }
+      const titulo = (tituloEl.value || "").trim();
+      const categoria = (categoriaEl.value || "").trim();
+      const descricao = (descricaoEl.value || "").trim();
+      const fotoFile = fotoEl && fotoEl.files && fotoEl.files[0];
 
-    const titulo = (tituloEl.value || "").trim();
-    const categoria = (categoriaEl.value || "").trim();
-    const descricao = (descricaoEl.value || "").trim();
-    const fotoFile = fotoEl && fotoEl.files && fotoEl.files[0];
+      if (!titulo || !categoria || !descricao) throw new Error("Preencha todos os campos.");
 
-    let fotoURL = "https://via.placeholder.com/400";
+      let fotoURL = "https://via.placeholder.com/400";
 
-    if (fotoFile) {
-      // usa Supabase (já definido no teu script)
-      const fileName = `${Date.now()}_${fotoFile.name}`;
-      const { data, error } = await supabase.storage.from('imagems_reportes').upload(fileName, fotoFile);
-      if (error) {
-        console.error("Erro ao subir imagem no Supabase:", error);
-        throw error;
+      if (fotoFile) {
+        const fileName = `${Date.now()}_${fotoFile.name}`;
+        const { data, error } = await supabase.storage.from('imagems_reportes').upload(fileName, fotoFile);
+        if (error) throw error;
+        fotoURL = supabase.storage.from('imagems_reportes').getPublicUrl(fileName).data.publicUrl;
       }
-      fotoURL = supabase.storage.from('imagems_reportes').getPublicUrl(fileName).data.publicUrl;
+
+      await addDoc(collection(db, "registros"), {
+        titulo, categoria, descricao, foto: fotoURL,
+        lat, lng, data: new Date().toISOString(),
+        userUID
+      });
+
+      alert("Ocorrência guardada com sucesso!");
+      map.closePopup();
+      carregarOcorrencias();
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro: " + (err.message || err));
     }
-
-    // guarda no Firestore
-    await window.addDoc(window.collection(window.db, "registros"), {
-      titulo, categoria, descricao, foto: fotoURL, lat, lng, data: new Date().toISOString()
-    });
-
-    alert("Ocorrência guardada com sucesso!");
-    map.closePopup();
-    carregarOcorrencias();
-  } catch (err) {
-    console.error("Erro ao guardar ocorrência:", err);
-    alert("Erro: " + (err.message || err));
   }
-}
-window.guardarOcorrencia = guardarOcorrencia;
-
+  window.guardarOcorrencia = guardarOcorrencia;
 
   async function carregarOcorrencias() {
     try {
+      const userUID = localStorage.getItem("userUID");
+      if (!userUID) return;
+
       const querySnapshot = await getDocs(collection(db, "registros"));
       ocorrencias = [];
+
       querySnapshot.forEach(doc => {
         const data = doc.data();
-        ocorrencias.push({ titulo: data.titulo, categoria: data.categoria, descricao: data.descricao, foto: data.foto || "https://via.placeholder.com/400", lat: data.lat, lng: data.lng });
+        if (data.userUID === userUID) {
+          ocorrencias.push({
+            titulo: data.titulo,
+            categoria: data.categoria,
+            descricao: data.descricao,
+            foto: data.foto || "https://via.placeholder.com/400",
+            lat: data.lat,
+            lng: data.lng
+          });
+        }
       });
+
       renderLista();
       renderPins();
     } catch (err) {
@@ -330,7 +339,12 @@ window.guardarOcorrencia = guardarOcorrencia;
     ocorrencias.forEach(o => {
       const card = document.createElement('div');
       card.className = 'ocorrencia';
-      card.innerHTML = `<img class="thumb" src="${o.foto}" alt="foto"/><h3>${o.titulo}</h3><p>${o.descricao}</p><span class="estado">${t.labels.registada}</span>`;
+      card.innerHTML = `
+        <img class="thumb" src="${o.foto}" alt="foto"/>
+        <h3>${o.titulo}</h3>
+        <p>${o.descricao}</p>
+        <span class="estado">${t.labels.registada}</span>
+      `;
       div.appendChild(card);
       card.addEventListener('click', () => map.setView([o.lat, o.lng], 18));
     });
@@ -341,7 +355,11 @@ window.guardarOcorrencia = guardarOcorrencia;
     markersGroup.clearLayers();
     ocorrencias.forEach(o => {
       const m = L.marker([o.lat, o.lng], { icon: icon }).addTo(markersGroup);
-      m.bindPopup(`<strong>${escapeHtml(o.titulo)}</strong><br>${escapeHtml(o.descricao)}`);
+      m.bindPopup(`
+        <strong>${escapeHtml(o.titulo)}</strong><br>
+        ${escapeHtml(o.descricao)}<br>
+        <img src="${o.foto}" style="width:100%;margin-top:5px"/>
+      `);
     });
   }
 
