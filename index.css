@@ -32,7 +32,6 @@ body {
   padding: 5px 10px;
   font-weight: bold;
 }
-
 /* ========================================================= */
 /*                        MENU                                */
 /* ========================================================= */
@@ -276,4 +275,44 @@ body {
   .texto-lateral {
     padding: 15px;
   }
+  /* ========================================================= */
+/*         AJUSTES MOBILE PEDIDOS POR TI                     */
+/* ========================================================= */
+@media (max-width: 768px) {
+
+  /* 1. Imagem maior no mobile */
+  .image-container img {
+    height: 260px;
+    object-fit: cover;
+  }
+
+  /* 2. Remover texto do banner no mobile */
+  .texto-banner {
+    display: none;
+  }
+
+  /* 3. Menos espaçamento no “Como registar” */
+  .como-registar h2 {
+    margin: 20px 0 10px 0;
+  }
+
+  .passos-container {
+    padding: 10px 0;
+    gap: 20px;
+  }
+
+  /* 4. Menos espaçamento na secção de estatísticas */
+  .estatisticas {
+    padding: 20px 0;
+  }
+
+  .container-estatisticas {
+    gap: 25px;
+  }
+
+  .bloco-estatistica h3 {
+    font-size: 32px;
+  }
+}
+
 }
