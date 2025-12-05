@@ -1,0 +1,83 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 0 !important;
+    font-family: Arial, sans-serif;
+}
+
+/* Fundo e Texto */
+body {
+    background: white;
+    color: #4d7e97;
+}
+
+/* Barra Superior */
+.barra-superior {
+    background: #4d7e97;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-setubal {
+    border: 2px solid white;
+    padding: 5px 10px;
+    font-weight: bold;
+}
+
+/* Menu */
+.barra-menu {
+    background: linear-gradient(to right, #59b360, #70c4af, #2682a7);
+    padding: 12px 20px;
+    color: white;
+    font-size: 18px;
+}
+
+/* Título da Página */
+.titulo-area {
+    text-align: center;
+    padding: 40px 0 10px;
+}
+
+.titulo-area h2 {
+    font-size: 36px;
+    color: #3d6477;
+}
+
+/* CONTEÚDO */
+.conteudo {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.conteudo h3 {
+    margin-top: 25px;
+    color: #3d6477;
+    font-size: 24px;
+}
+
+/* Rodapé */
+.rodape {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    border-top: 2px solid #3d6477;
+    background: #f5f5f5;
+}
+
+.link-rodape {
+    color: #4d7e97;
+    margin: 0 20px;
+    text-decoration: none;
+}
+
+.link-rodape:hover {
+    text-decoration: underline;
+}

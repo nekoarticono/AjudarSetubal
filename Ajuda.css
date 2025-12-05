@@ -1,0 +1,54 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* FUNDO COLORIDO */
+body {
+    background: linear-gradient(to right, #59b360, #70c4af, #2682a7);
+    padding: 40px 20px;
+}
+
+/* ÁREA DO TÍTULO */
+.topo {
+    text-align: center;
+    padding: 30px 0;
+    color: white;
+}
+
+.topo h1 {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* PÁGINA BRANCA */
+.conteudo {
+    background: white;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 0; /* você pediu sem bordas arredondadas */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+h2 {
+    margin-bottom: 10px;  /* espaço abaixo do título */
+}
+
+p {
+    margin-top: 5px; /* pequeno espaço acima do parágrafo */
+    line-height: 1.6; /* deixa o texto mais bonito e legível */
+}
+/* TEXTOS */
+.conteudo h2 {
+    margin-top: 45px;
+    color: #2682a7;
+}
+
+.conteudo p {
+    margin-top: 10px;
+    line-height: 1.6;
+    font-size: 16px;
+}
