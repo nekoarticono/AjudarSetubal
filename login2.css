@@ -59,7 +59,17 @@ input:focus {
   border-color: #4d7e97;
 }
 
+/* BOTÃO VOLTAR — igual ao botão Entrar */
 
+
+/* Hover */
+.btn-voltar:hover {
+    background-color: #3c657a;      /* escurece ao passar o mouse */
+}
+.h3
+{
+ color: #bbb;
+}
 
 
 

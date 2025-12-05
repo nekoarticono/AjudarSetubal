@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="stylesheet" href="site.css">
-<title>Reporta Cidade - Demo</title>
+<title>Reporte</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -26,8 +26,7 @@
 <!-- HEADER -->
 <div id="header">
   <div class="header-left">
-    <button id="toggleSidebar" class="lang-btn">📋</button>
-    <div class="brand">Cidade de Setúbal</div>
+    <div class="brand">AjudarSetubal</div>
   </div>
   <div class="header-right">
     <div class="setubal-box" style="background:transparent;border:2px solid rgba(255,255,255,0.2);padding:6px 12px;border-radius:6px;">Setúbal.</div>
@@ -36,8 +35,8 @@
 </div>
 <!-- SUBMENU -->
 <div id="submenu">
-  <div id="s-help"><strong>AjudaSetúbal</strong></div>
-  <a href="index.html"><button id="btnVoltar" class="menu-btn">🏠 Voltar</button></a>
+  <a href="index.html"><button id="btnVoltar" class="menu-btn">🏠 <span id="btnVoltarText">Voltar</span></button></a>
+  <button id="toggleSidebar" class="lang-btn">📋</button>
 </div>
 
 <!-- MAP -->
@@ -104,8 +103,8 @@ window.uploadImagemSupabase = uploadImagemSupabase;
 const TEXTS = {
   pt: {
     langLabel: 'EN',
-    headerBrand: 'Cidade de Setúbal',
-    submenu: { help: 'AjudaSetúbal' },
+    headerBrand: 'AjudaSetúbal',
+    submenu: { btn: 'Voltar'},
     sidebarTitle: '📍 Ocorrências',
     newOccurrenceTitle: '📝 Nova ocorrência',
     labels: { titulo: 'Título', categoria: 'Categoria', descricao: 'Descrição', foto: 'Foto', guardar: '💾 Guardar', registada: 'Registada', chooseFile: 'Escolher ficheiro', noFile: 'Nenhum ficheiro' },
@@ -113,8 +112,8 @@ const TEXTS = {
   },
   en: {
     langLabel: 'PT',
-    headerBrand: 'City of Setúbal',
-    submenu: { help: 'AjudaSetúbal'},
+    headerBrand: 'AjudaSetúbal',
+    submenu: {btn: 'Return'},
     sidebarTitle: '📍 Incidents',
     newOccurrenceTitle: '📝 New incident',
     labels: { titulo: 'Title', categoria: 'Category', descricao: 'Description', foto: 'Photo', guardar: '💾 Save', registada: 'Registered', chooseFile: 'Choose file', noFile: 'No file' },
@@ -126,6 +125,7 @@ let lang = 'pt';
 let map, markersGroup;
 let ocorrencias = [];
 let currentPopup = null;
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyLanguage() {
     const t = TEXTS[lang];
     document.querySelector('.brand').textContent = t.headerBrand;
-    document.getElementById('s-help').innerHTML = `<strong>${t.submenu.help}</strong>`;
+    document.getElementById('btnVoltarText').textContent = t.submenu.btn;
     document.getElementById('sidebarTitle').textContent = t.sidebarTitle;
     renderLista();
     renderPins();
@@ -258,6 +258,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const toggleBtn = document.getElementById("toggleSidebar");
+
+let sidebarOpen = false;
+
+toggleBtn.addEventListener("click", (e) => {
+  e.stopPropagation(); // evita fechar imediatamente ao clicar no botão
+
+  sidebarOpen = !sidebarOpen;
+
+  if (sidebarOpen) {
+    sidebar.style.left = "12px";   // mostra
+  } else {
+    sidebar.style.left = "-100%";  // esconde
+  }
+});
+
+// === FECHAR O SIDEBAR AO CLICAR FORA — APENAS NO MOBILE ===
+document.addEventListener("click", (e) => {
+  if (window.innerWidth > 720) return; // só aplica no mobile
+
+  if (
+    sidebarOpen &&
+    !sidebar.contains(e.target) &&
+    e.target !== toggleBtn
+  ) {
+    sidebar.style.left = "-100%";
+    sidebarOpen = false;
+  }
+});
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 720) {
+    sidebar.style.left = "12px"; // posição normal no desktop
+    sidebarOpen = false;        // estado não interessa porque no desktop nunca se esconde
+  }
+});
   // ===== Funções principais =====
   async function guardarOcorrencia(lat, lng, uniqueId) {
     try {
@@ -287,10 +322,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       await addDoc(collection(db, "registros"), {
-        titulo, categoria, descricao, foto: fotoURL,
-        lat, lng, data: new Date().toISOString(),
-        userUID
-      });
+  titulo, categoria, descricao, foto: fotoURL,
+  lat, lng, data: new Date().toISOString(),
+  estado: "Registado",
+  userUID
+});
 
       alert("Ocorrência guardada com sucesso!");
       map.closePopup();
@@ -315,13 +351,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = doc.data();
         if (data.userUID === userUID) {
           ocorrencias.push({
-            titulo: data.titulo,
-            categoria: data.categoria,
-            descricao: data.descricao,
-            foto: data.foto || "https://via.placeholder.com/400",
-            lat: data.lat,
-            lng: data.lng
-          });
+         id: doc.id,
+        titulo: data.titulo,
+        categoria: data.categoria,
+        descricao: data.descricao,
+        foto: data.foto || "https://via.placeholder.com/400",
+        lat: data.lat,
+         lng: data.lng,
+         estado: data.estado || "Registado"
+});
         }
       });
 
@@ -343,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <img class="thumb" src="${o.foto}" alt="foto"/>
         <h3>${o.titulo}</h3>
         <p>${o.descricao}</p>
-        <span class="estado">${t.labels.registada}</span>
+        <span class="estado">${escapeHtml(o.estado)}</span>
       `;
       div.appendChild(card);
       card.addEventListener('click', () => map.setView([o.lat, o.lng], 18));

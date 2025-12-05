@@ -16,7 +16,15 @@ body, html {
 #sidebar::-webkit-scrollbar {
   width: 8px;
 }
-
+#toggleSidebar{
+  background: linear-gradient(180deg,#74c5326c,#05b3319d);
+    color: white;
+    border:none;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 10px;
+}
 #btnVoltar{
 
     background: linear-gradient(180deg,#74c5326c,#05b3319d);

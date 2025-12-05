@@ -5,7 +5,15 @@
   border-radius: 0 !important;
   box-sizing: border-box;
 }
-
+.botao-reportar{
+  text-decoration: none;
+  background-color: #4d7e97;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
 /* Corpo */
 body {
   margin: 0;
@@ -19,7 +27,7 @@ body {
 /*                   BARRA SUPERIOR                           */
 /* ========================================================= */
 .barra-superior {
-  background: #4d7e97;
+  background: linear-gradient(to right, #59b360,#70c4af, #2682a7);
   color: white;
   padding: 6px 20px;
   display: flex;
@@ -32,6 +40,7 @@ body {
   padding: 5px 10px;
   font-weight: bold;
 }
+
 /* ========================================================= */
 /*                        MENU                                */
 /* ========================================================= */
@@ -70,6 +79,7 @@ body {
 }
 
 .menu-direita button {
+  text-decoration: none;
   background-color: #4d7e97;
   color: white;
   padding: 8px 15px;
@@ -80,6 +90,7 @@ body {
 
 /* Menu Mobile - aparece na ESQUERDA */
 .menu-mobile {
+
   display: none;
   flex-direction: column;
   background: white;
@@ -91,6 +102,7 @@ body {
   gap: 10px;
   border: 1px solid #ddd;
   z-index: 1000;
+  font-weight: bold;
 }
 
 .menu-mobile.open {
@@ -124,28 +136,121 @@ body {
 }
 
 /* ========================================================= */
-/*                    PASSOS (COMO REGISTAR)                  */
+/*                       NOTICIAS                            */
 /* ========================================================= */
-.passos-container {
-  display: flex;
-  justify-content: center;
-  gap: 80px;
-  padding: 40px 0;
-  text-align: center;
+/* ---------- TÍTULO ---------- */
+.titulo-noticias {
+    text-align: center;
+    font-size: 40px;
+    margin: 30px 0;
 }
 
-.passo {
-  width: 250px;
+/* ---------- CONTAINER PRINCIPAL ---------- */
+.noticias-container {
+    position: relative;
+    width: 100%;
+    padding: 0 20px; /* afastamento da borda */
+    box-sizing: border-box;
 }
 
-.passo h3 {
-  font-size: 32px;
+/* ---------- CARROSSEL ---------- */
+.noticias-carousel {
+    display: flex;
+    gap: 20px; /* espaço entre cards */
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 12px;
 }
 
-.como-registar h2 {
-  text-align: center;
-  margin: 40px;
+/* Barra de rolagem */
+.noticias-carousel::-webkit-scrollbar {
+    height: 6px;
 }
+
+.noticias-carousel::-webkit-scrollbar-thumb {
+    background: #0057ff;
+    border-radius: 20px;
+}
+
+.noticias-carousel::-webkit-scrollbar-track {
+    background: #d7e5ff;
+}
+
+/* ---------- CARD ---------- */
+.noticia-card {
+    min-width: calc((100% - 40px) / 3); /* 3 cards no desktop */
+    background: white;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: none; /* você pediu sem sombra */
+}
+
+.noticia-card img {
+    width: 100%;
+    height: 200px; /* como você pediu */
+    object-fit: cover;
+    border-radius: 16px 16px 0 0;
+}
+
+.noticia-card p {
+    padding: 10px;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* ---------- SETAS ---------- */
+.seta {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    background: white;
+    border: 2px solid #0070ff;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 22px;
+    color: #0070ff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seta-esquerda {
+    left: -5px;
+}
+
+.seta-direita {
+    right: -5px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* -----------------------------  MOBILE  ------------------------------- */
+/* ---------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    .noticias-container {
+        padding: 0 15px;
+    }
+
+    .noticias-carousel {
+        gap: 20px;
+    }
+
+    .noticia-card {
+        min-width: 85%; /* apenas 1 card visível no mobile */
+    }
+
+    .noticia-card img {
+        height: 120px; /* aumenta para não ficar pequeno demais */
+    }
+
+    .seta {
+        display: none; /* escondemos as setas no mobile */
+    }
+}
+
 
 /* ========================================================= */
 /*                    ESTATÍSTICAS                            */
@@ -203,6 +308,7 @@ body {
   padding: 20px;
   text-align: center;
   border-top: 2px solid #3d6477;
+  
 }
 
 .link-privacidade {
@@ -276,7 +382,7 @@ body {
     padding: 15px;
   }
   /* ========================================================= */
-/*         AJUSTES MOBILE PEDIDOS POR TI                     */
+ /*                    AJUSTES MOBILE                         */
 /* ========================================================= */
 @media (max-width: 768px) {
 
@@ -313,6 +419,30 @@ body {
   .bloco-estatistica h3 {
     font-size: 32px;
   }
+}
+  /* ========================================================= */
+ /*                    RODAPE                                 */
+/* ========================================================= */
+.rodape {
+    display: flex;
+    justify-content: center;
+    gap: 100px; /* espaço entre Política e Ajuda */
+    padding: 20px 0;
+    background: #f5f5f5;
+}
+
+.link-rodape {
+    color: #434446;
+    font-size: 16px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+.divisor-footer{
+  color:#434446 ;
+  font-weight: bold;
+}
+.link-rodape:hover {
+    text-decoration: underline;
 }
 
 }

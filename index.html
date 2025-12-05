@@ -11,7 +11,7 @@
     <!-- Barra Superior -->
     <header class="barra-superior">
         <h1>Portal do Município</h1>
-        <div class="logo-setubal">Setúbal</div>
+        <div class="logo-setubal">Setúbal.</div>
     </header>
 
   <nav class="barra-menu">
@@ -19,7 +19,7 @@
 
     <div class="menu-esquerda">
         <button class="icone-menu" onclick="toggleMenu()">☰</button>
-        <span class="nome-site">ReportaCidade</span>
+        <span class="nome-site">AjudarSetubal</span>
     </div>
 
     <!-- Menu Desktop -->
@@ -49,30 +49,55 @@
         </div>
     </section>
 
-    <!-- Como Registar -->
-    <section class="como-registar">
-        <h2>Como registar uma ocorrência</h2>
-        <div class="passos-container">
-            <div class="passo">
-                <h3>1</h3>
-                <strong>Identificar</strong>
-                <p>Entre ou crie uma conta.</p>
-            </div>
-            <div class="divisor"></div>
-            <div class="passo">
-                <h3>2</h3>
-                <strong>Localizar</strong>
-                <p>Identifique o local e selecione a categoria.</p>
-            </div>
-            <div class="divisor"></div>
-            <div class="passo">
-                <h3>3</h3>
-                <strong>Submeter</strong>
-                <p>Envie e acompanhe o pedido.</p>
-            </div>
-        </div>
-    </section>
+ <!--Noticias-->
+<h2 class="titulo-noticias">Notícias</h2>
 
+<div class="noticias-container">
+
+    <button class="seta seta-esquerda" id="setaEsquerda">❮</button>
+
+    <div class="noticias-carousel" id="carouselNoticias">
+
+        <div class="noticia-card">
+            <img src="img1.jpg" alt="">
+            <p>Título da Notícia 1</p>
+        </div>
+
+        <div class="noticia-card">
+            <img src="img2.jpg" alt="">
+            <p>Título da Notícia 2</p>
+        </div>
+
+        <div class="noticia-card">
+            <img src="img3.jpg" alt="">
+            <p>Título da Notícia 3</p>
+        </div>
+
+        <div class="noticia-card">
+            <img src="img4.jpg" alt="">
+            <p>Título da Notícia 4</p>
+        </div>
+
+        <div class="noticia-card">
+            <img src="img5.jpg" alt="">
+            <p>Título da Notícia 5</p>
+        </div>
+
+    </div>
+
+    <button class="seta seta-direita" id="setaDireita">❯</button>
+</div>
+<script>
+const carousel = document.getElementById("carouselNoticias");
+const setaEsquerda = document.getElementById("setaEsquerda");
+const setaDireita = document.getElementById("setaDireita");
+
+// rola 1 card por vez
+setaDireita.onclick = () => carousel.scrollBy({ left: 320, behavior: "smooth" });
+setaEsquerda.onclick = () => carousel.scrollBy({ left: -320, behavior: "smooth" });
+</script>
+
+</div>
     <!-- Estatísticas -->
     <section class="estatisticas">
         <h2>Número de ocorrências nas últimas 24h</h2>
@@ -97,8 +122,8 @@
     <!-- Vídeo + Texto Lado a Lado -->
     <section class="secao-lateral">
         <div class="video-lateral">
-            <video controls>
-                <source src="video.mp4" type="video/mp4">
+            <video autoplay loop muted playsinline controls>
+                <source src="Setúbal  Portugal  4K Aerial Cinematic Drone 1.mp4" type="video/mp4">
                 O seu navegador não suporta vídeo.
             </video>
         </div>
@@ -114,20 +139,24 @@
     </section>
 
     <!-- Rodapé -->
-    <footer class="rodape">
-        <a href="privacidade.html" class="link-privacidade">
-            Política de Privacidade
-        </a>
-    </footer>
+ <footer class="rodape">
+    <span class="divisor-footer">|</span>
+    <a href="privacidade.html" class="link-rodape">Política de Privacidade</a>
+    <span class="divisor-footer">|</span>
+    
+    <a href="ajuda.html" class="link-rodape">Ajuda</a>
+    <span class="divisor-footer">|</span>
+</footer>
+
+
     <!-- Script para menu mobile -->
     <script>
         function toggleMenu() {
             const menu = document.getElementById('menu-mobile');
             menu.classList.toggle('open');
         }
-
-
-// Fecha menu mobile se clicar fora dele
+    
+    // Fecha menu mobile se clicar fora dele
 document.addEventListener('click', function(event) {
     const menu = document.getElementById('menu-mobile');
     const botaoMenu = document.querySelector('.icone-menu');
@@ -139,24 +168,27 @@ document.addEventListener('click', function(event) {
 });
     </script>
 <script>
-const username = localStorage.getItem("username");
-const userUID = localStorage.getItem("userUID");
+window.onload = function () {
+    const username = localStorage.getItem("username");
+    const userUID = localStorage.getItem("userUID");
 
-const botaoReportar = document.querySelectorAll("a[href='Pag_Reportes.html']");
-const menuDireita = document.querySelector('.menu-direita');
-const menuMobile = document.getElementById("menu-mobile");
+    const botaoReportar = document.querySelectorAll("a[href='Pag_Reportes.html']");
+    const menuDireita = document.querySelector('.menu-direita');
+    const menuMobile = document.getElementById("menu-mobile");
 
-if (!userUID) {
-    // Usuário não logado
-    botaoReportar.forEach(btn => btn.style.display = "none"); // Esconde reportar
-} else {
-    // Usuário logado
-    botaoReportar.forEach(btn => btn.style.display = "inline-block"); // Mostra reportar
+    if (!userUID) {
+        botaoReportar.forEach(btn => btn.style.display = "none");
+        return;
+    }
 
-    // Esconder login e criar conta (desktop)
-    menuDireita.querySelectorAll(".botao-login, .botao-entrar").forEach(el => el.style.display = "none");
+    // --- Se está logado ---
+    botaoReportar.forEach(btn => btn.style.display = "inline-block");
 
-    // ---------- Desktop: username + logout ----------
+    // Esconder login/criar conta (desktop)
+    menuDireita.querySelectorAll(".botao-login, .botao-entrar")
+        .forEach(el => el.style.display = "none");
+
+    // --- Desktop: username + logout ---
     const userContainer = document.createElement("div");
     userContainer.style.display = "flex";
     userContainer.style.alignItems = "center";
@@ -175,6 +207,7 @@ if (!userUID) {
     logoutBtn.style.padding = "8px 15px";
     logoutBtn.style.cursor = "pointer";
     logoutBtn.style.fontWeight = "bold";
+
     logoutBtn.onclick = () => {
         localStorage.removeItem("userUID");
         localStorage.removeItem("username");
@@ -185,8 +218,9 @@ if (!userUID) {
     userContainer.appendChild(logoutBtn);
     menuDireita.appendChild(userContainer);
 
-    // ---------- Mobile: username + logout ----------
-    menuMobile.querySelectorAll("a[href='login.html'], a[href='login2.html']").forEach(el => el.style.display = "none");
+    // --- Mobile ---
+    menuMobile.querySelectorAll("a[href='login.html'], a[href='login2.html']")
+        .forEach(el => el.style.display = "none");
 
     const mobileUserContainer = document.createElement("div");
     mobileUserContainer.style.display = "flex";
@@ -207,6 +241,7 @@ if (!userUID) {
     mobileLogoutBtn.style.border = "none";
     mobileLogoutBtn.style.fontWeight = "bold";
     mobileLogoutBtn.style.cursor = "pointer";
+
     mobileLogoutBtn.onclick = () => {
         localStorage.removeItem("userUID");
         localStorage.removeItem("username");
@@ -216,10 +251,12 @@ if (!userUID) {
     mobileUserContainer.appendChild(mobileUserName);
     mobileUserContainer.appendChild(mobileLogoutBtn);
     menuMobile.prepend(mobileUserContainer);
-}
+};
 </script>
 
 
+<script>
+</script>
 
 </body>
 </html>
