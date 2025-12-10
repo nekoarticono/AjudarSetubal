@@ -9,12 +9,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.5/dist/umd/supabase.min.js"></script>
-<script>
-  const SUPABASE_URL = "https://ndxcyrryiwbvzyzkrath.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_meHimVyAEGOxBkEN5kecMQ_Ua-4SaA6";
-
-  window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-</script>
 
 <style>
 /* ======= GLOBAL ======= */
@@ -82,9 +76,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // Função para upload de imagens no Supabase
 async function uploadImagemSupabase(file) {
   const fileName = `${Date.now()}_${file.name}`;
-  const { data, error } = await supabase.storage.from("imagens").upload(fileName, file);
+  const { data, error } = await supabase.storage.from("imagems_reportes").upload(fileName, file);
   if (error) throw error;
-  const { data: publicUrlData } = supabase.storage.from("imagens").getPublicUrl(fileName);
+  const { data: publicUrlData } = supabase.storage.from("imagems_reportes").getPublicUrl(fileName);
   return publicUrlData.publicUrl;
 }
 
@@ -126,8 +120,6 @@ let map, markersGroup;
 let ocorrencias = [];
 let currentPopup = null;
 
-
-document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('DOMContentLoaded', () => {
   const listaOcorrencias = document.getElementById('listaOcorrencias');
